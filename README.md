@@ -16,7 +16,7 @@ An *Environs Connector Host* will be a HTTP server which maintains a set of dere
  
 ### Agents
 
-An *Environs Agent* will typically run in a browser and have the following capabilities :
+An *Environs Agent* will typically run in a browser and have the following features :
 
 * HTTP client(s) able to connect to Web resources
 * algorithm(s) for manipulating data
@@ -52,7 +52,8 @@ The definition of an individual organisms and agents is arbitrary, the connectiv
 
 Life runs on a grid of cells. What happens at the 4 edges of the grid depends on the specific implementation : some use a notional infinite grid, more commonly either cells may *fall off* the edges of the grid or they are reflected across opposing sides in a kind of toroidal topology.
 
-The implementation here will expose the 4 edges of the grid as Web resources. The game engine will read and write to them as usual, but additionally their contents may be read and/or written to by other HTTP agents.
+The implementation here will expose the 4 edges of the grid as Web resources. The game engine will read and write to them as usual, but additionally their contents may be read and/or written to by other HTTP agents. Thus multiple small grids may be joined together to form a larger grid. Note that this will almost certainly not follow the conventional rules of Life at the edges as the connections between grids will be asynchronous.
+
 
 ![Life Agent](https://github.com/danja/environs/raw/main/media/life-block.png)
 
