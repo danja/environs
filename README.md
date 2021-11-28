@@ -33,7 +33,7 @@ _Note that the implementation of an agent doesn't necessarily have to run in a b
 
 ### Ports
 
-Ports are HTTP resources. They may act as inputs or outputs (or both). Not Roy's HATEOS, the Web server as repository of connection state.
+Ports are HTTP resources. They may act as inputs or outputs (or both). Not Roy's HATEOS, but the Web server as repository of connection state.
 
 ### Vocabularies
 
