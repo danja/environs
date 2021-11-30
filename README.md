@@ -14,7 +14,7 @@ _Global Artificial Life_
 
 **Environs** is a framework for distributed artificial life. The environment is the Web. Typically organisms are defined in the browser, connections between organisms achieved through resources on Web servers. The basic requirements for interaction are minimal although the description below may make these seem complicated, so a demonstration system based on [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) will be provided.
 
-![System Outline](https://github.com/danja/environs/raw/main/media/abstract-block.png)
+![System Outline](https://github.com/danja/environs/raw/main/docs/media/abstract-block.png)
 
 ### Connector Host
 
@@ -60,7 +60,7 @@ Life runs on a grid of cells. What happens at the 4 edges of the grid depends on
 
 The implementation here will expose the 4 edges of the grid as Web resources. The game engine will read and write to them as usual, but additionally their contents may be read and/or written to by other HTTP agents. Thus multiple small grids may be joined together to form a larger grid. Note that this will almost certainly not follow the conventional rules of Life at the edges as the connections between grids will be asynchronous.
 
-![Life Agent](https://github.com/danja/environs/raw/main/media/life-block.png)
+![Life Agent](https://github.com/danja/environs/raw/main/docs/media/life-block.png)
 
 // Work out more : the material being passed around is arbitrary data, subject to a few conventions : HTTP specs etc, so really anything goes. I think it makes sense to partition 'namespaces' server-side, so for me http://hyperdata.it/environs/limited-space-here. The intention is to make all URLs self-describing anyway, so opaque naming (maybe a hash of a name or whatever, http://hyperdata.it/environs/FC12). For each of those resources, perhaps have a low, arbitrary data size limit for practical reasons and to encourage distribution of data (say 1MB per URL?).
 There will also need to be some kind of conventions on sharing agents names, descriptions etc. I think it would be more fun to _not_ have any access controls (at least initially), within this - any agent can read/write wherever they like. Potentially an extra challenge for anyone wishing to address the shared spaces.
