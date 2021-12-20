@@ -1,9 +1,19 @@
+/* life.js
+ *
+ * Quick & Dirty implementation of Conway's Game of Life
+ * using HTML <canvas>
+ *
+ * https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+ */
+
 const width = 400 // is also in HTML
 const height = 400
 
+// initial state taken from an image
 var image = new Image()
 image.src = 'media/logo-invert.png'
 
+// uses 2 canvasses
 var canvas = document.getElementById('canvas')
 var canvasHidden = document.getElementById('hidden')
 
@@ -13,16 +23,7 @@ var contextHidden = canvasHidden.getContext('2d')
 var imageData = context.getImageData(0, 0, width - 1, height - 1)
 var imageDataHidden = contextHidden.getImageData(0, 0, width - 1, height - 1)
 
-function draw () {
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    imageDataHidden.data[i + 0] = 255 - imageData.data[i + 0] // R
-    imageDataHidden.data[i + 1] = 255 - imageData.data[i + 1] // G
-    imageDataHidden.data[i + 2] = 255 - imageData.data[i + 2] // B
-    imageDataHidden.data[i + 3] = imageData.data[i + 3] // Alpha
-  }
-  contextHidden.putImageData(imageDataHidden, 0, 0)
-}
-
+// main algorithm
 function calculateCell (data, i, j) {
   let a = getState(data, i - 1, j - 1)
   let b = getState(data, i, j - 1)
@@ -50,6 +51,7 @@ function calculateCell (data, i, j) {
   }
 }
 
+// step through points on grid
 function calculateGrid () {
   for (let i = 1; i < width - 2; i++) {
     var line = ''
@@ -63,6 +65,7 @@ function calculateGrid () {
   context.putImageData(imageData, 0, 0)
 }
 
+// copies one canvas's data to another
 function copy (source, sink, sinkContext) {
   for (let i = 0; i < width - 1; i++) {
     for (let j = 0; j < height - 1; j++) {
@@ -73,6 +76,8 @@ function copy (source, sink, sinkContext) {
   sinkContext.putImageData(sink, 0, 0)
 }
 
+// randomly nobbles some of the cells
+// (solid areas from original image die out immediately)
 function grey () {
   for (let i = 0; i < width - 1; i++) {
     for (let j = 0; j < height - 1; j++) {
@@ -85,6 +90,8 @@ function grey () {
   context.putImageData(imageData, 0, 0)
 }
 
+// canvas data is an array of RGBA values
+// this maps to x,y flattens to 1 bit
 function getState (data, x, y) {
   let pos = 4 * (x + y * height)
   let sum = data[pos] + data[pos + 1] + data[pos + 2] // R+G+B
@@ -95,6 +102,8 @@ function getState (data, x, y) {
   return 0
 }
 
+// takes one bit at x,y
+// maps to canvas 1D array
 function setState (data, x, y, alive) {
   let pos = 4 * (x + y * height)
   if (alive == 0) {
@@ -108,6 +117,7 @@ function setState (data, x, y, alive) {
   data[pos + 2] = 0
 }
 
+// poking around for debugging
 function testStates () {
   for (let i = 1; i < width - 2; i++) {
     let val = getState(imageData.data, i, 100)
@@ -117,6 +127,7 @@ function testStates () {
   contextHidden.putImageData(imageDataHidden, 0, 0)
 }
 
+// main loop
 function generation () {
   copy(imageData, imageDataHidden, contextHidden)
   context.clearRect(0, 0, 400, 400)
@@ -132,12 +143,11 @@ image.addEventListener(
     imageDataHidden = contextHidden.getImageData(0, 0, width - 1, height - 1)
 
     grey()
-    // contextHidden.drawImage(image, 0, 0)
-    //  draw()
+
     //  testStates()
 
     for (let n = 0; n < 10; n++) {
-      setInterval(generation, 1000)
+      setInterval(generation, 10) // delay in mS
     }
   },
   false
