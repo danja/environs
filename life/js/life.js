@@ -134,6 +134,7 @@ function generation () {
   calculateGrid()
 }
 
+// wait until image has loaded before doing stuff
 image.addEventListener(
   'load',
   function () {
