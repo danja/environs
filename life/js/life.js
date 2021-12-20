@@ -6,6 +6,8 @@
  * https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
  */
 
+const delay = 1 // mS between generations
+
 const width = 400 // is also in HTML
 const height = 400
 
@@ -52,17 +54,51 @@ function calculateCell (data, i, j) {
 }
 
 // step through points on grid
+// calculate values from hidden canvas
+// place in main canvas
 function calculateGrid () {
   for (let i = 1; i < width - 2; i++) {
-    var line = ''
+    // var line = '' // debugging
     for (let j = 1; j < height - 2; j++) {
       let newVal = calculateCell(imageDataHidden.data, i, j)
-      line = line + newVal
+      // line = line + newVal
       setState(imageData.data, i, j, newVal)
     }
     // console.log(line)
   }
   context.putImageData(imageData, 0, 0)
+}
+
+function loadSides (targetData) {
+  const north = 0
+  const south = 0
+  const east = 0
+  const west = 0
+
+  var x = 0
+  for (let y = 0; y < height; y++) {
+    // do west to binary here
+    setState(targetData, 0, y, 0)
+  }
+
+  x = 399
+  for (let y = 0; y < height; y++) {
+    // do east to binary here
+    setState(targetData, width - 1, y, 0)
+  }
+
+  var y = 0
+  for (let x = 0; x < width; x++) {
+    // do north to binary here
+    setState(targetData, x, 0, 0)
+  }
+
+  y = 399
+  for (let x = 0; x < width; x++) {
+    // do south to binary here
+    setState(targetData, x, height - 1, 0)
+  }
+  // contextHidden.putImageData(imageDataHidden, 0, 0)
 }
 
 // copies one canvas's data to another
@@ -143,13 +179,14 @@ image.addEventListener(
     imageData = context.getImageData(0, 0, width - 1, height - 1)
     imageDataHidden = contextHidden.getImageData(0, 0, width - 1, height - 1)
 
+    loadSides(imageData.data)
+    context.putImageData(imageData, 0, 0)
+
     grey()
 
     //  testStates()
 
-    for (let n = 0; n < 10; n++) {
-      setInterval(generation, 10) // delay in mS
-    }
+    setInterval(generation, delay) // delay in mS
   },
   false
 )
