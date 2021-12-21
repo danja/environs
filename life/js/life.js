@@ -6,7 +6,10 @@
  * https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
  */
 
-const delay = 1 // mS between generations
+// calculateGrid() goes hidden -> main
+// copy() from main -> hidden
+
+const delay = 100 // mS between generations
 
 const width = 400 // is also in HTML
 const height = 400
@@ -22,8 +25,8 @@ var canvasHidden = document.getElementById('hidden')
 var context = canvas.getContext('2d')
 var contextHidden = canvasHidden.getContext('2d')
 
-var imageData = context.getImageData(0, 0, width - 1, height - 1)
-var imageDataHidden = contextHidden.getImageData(0, 0, width - 1, height - 1)
+var imageData = context.getImageData(0, 0, width, height)
+var imageDataHidden = contextHidden.getImageData(0, 0, width, height)
 
 // main algorithm
 function calculateCell (data, i, j) {
@@ -57,9 +60,9 @@ function calculateCell (data, i, j) {
 // calculate values from hidden canvas
 // place in main canvas
 function calculateGrid () {
-  for (let i = 1; i < width - 2; i++) {
+  for (let i = 1; i < width - 1; i++) {
     // var line = '' // debugging
-    for (let j = 1; j < height - 2; j++) {
+    for (let j = 1; j < height - 1; j++) {
       let newVal = calculateCell(imageDataHidden.data, i, j)
       // line = line + newVal
       setState(imageData.data, i, j, newVal)
@@ -103,8 +106,8 @@ function loadSides (targetData) {
 
 // copies one canvas's data to another
 function copy (source, sink, sinkContext) {
-  for (let i = 0; i < width - 1; i++) {
-    for (let j = 0; j < height - 1; j++) {
+  for (let i = 0; i < width; i++) {
+    for (let j = 0; j < height; j++) {
       let newVal = getState(source.data, i, j)
       setState(sink.data, i, j, newVal) // newVal
     }
@@ -115,8 +118,8 @@ function copy (source, sink, sinkContext) {
 // randomly nobbles some of the cells
 // (solid areas from original image die out immediately)
 function grey () {
-  for (let i = 0; i < width - 1; i++) {
-    for (let j = 0; j < height - 1; j++) {
+  for (let i = 0; i < width; i++) {
+    for (let j = 0; j < height; j++) {
       let val = getState(imageData.data, i, j)
       if (val == 1) {
         setState(imageData.data, i, j, Math.floor(Math.random() * 2)) // newVal
@@ -124,6 +127,17 @@ function grey () {
     }
   }
   context.putImageData(imageData, 0, 0)
+}
+
+function printGrid (data) {
+  for (let i = 0; i < width; i++) {
+    // fill with zeroes
+    var line = ''
+    for (let j = 0; j < height; j++) {
+      line = line + getState(data, i, j)
+    }
+    console.log(line)
+  }
 }
 
 // canvas data is an array of RGBA values
@@ -163,30 +177,43 @@ function testStates () {
   contextHidden.putImageData(imageDataHidden, 0, 0)
 }
 
+// poking around for debugging
+function makeThree () {
+  for (let i = 0; i < 5; i++) {
+    // fill with zeroes
+    for (let j = 0; j < 5; j++) {
+      setState(imageData.data, i, j, 0)
+    }
+  }
+  setState(imageData.data, 1, 2, 1)
+  setState(imageData.data, 2, 2, 1)
+  setState(imageData.data, 3, 2, 1)
+
+  context.putImageData(imageData, 0, 0)
+}
+
 // main loop
 function generation () {
   copy(imageData, imageDataHidden, contextHidden)
+  contextHidden.putImageData(imageDataHidden, 0, 0)
   context.clearRect(0, 0, 400, 400)
   calculateGrid()
+  context.putImageData(imageData, 0, 0)
+}
+
+function main () {
+  context.drawImage(image, 0, 0)
+  contextHidden.drawImage(image, 0, 0) ///// for some reason does need something rendering
+
+  imageData = context.getImageData(0, 0, width, height)
+  imageDataHidden = contextHidden.getImageData(0, 0, width, height)
+
+  grey()
+  copy(imageData, imageDataHidden, contextHidden)
+
+  loadSides(imageData.data)
+  setInterval(generation, delay) // delay in mS
 }
 
 // wait until image has loaded before doing stuff
-image.addEventListener(
-  'load',
-  function () {
-    context.drawImage(image, 0, 0)
-    contextHidden.drawImage(image, 0, 0) /////
-    imageData = context.getImageData(0, 0, width - 1, height - 1)
-    imageDataHidden = contextHidden.getImageData(0, 0, width - 1, height - 1)
-
-    loadSides(imageData.data)
-    context.putImageData(imageData, 0, 0)
-
-    grey()
-
-    //  testStates()
-
-    setInterval(generation, delay) // delay in mS
-  },
-  false
-)
+image.addEventListener('load', main, false)
