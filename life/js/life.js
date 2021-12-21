@@ -72,7 +72,7 @@ function calculateGrid () {
   context.putImageData(imageData, 0, 0)
 }
 
-function loadSides (targetData) {
+function loadSides (targetData, targetContext) {
   const north = 0
   const south = 0
   const east = 0
@@ -101,7 +101,7 @@ function loadSides (targetData) {
     // do south to binary here
     setState(targetData, x, height - 1, 0)
   }
-  // contextHidden.putImageData(imageDataHidden, 0, 0)
+  targetContext.putImageData(imageData, 0, 0)
 }
 
 // copies one canvas's data to another
@@ -129,6 +129,7 @@ function grey () {
   context.putImageData(imageData, 0, 0)
 }
 
+// for debugging
 function printGrid (data) {
   for (let i = 0; i < width; i++) {
     // fill with zeroes
@@ -208,10 +209,11 @@ function main () {
   imageData = context.getImageData(0, 0, width, height)
   imageDataHidden = contextHidden.getImageData(0, 0, width, height)
 
+  loadSides(imageData.data, context)
+
   grey()
   copy(imageData, imageDataHidden, contextHidden)
 
-  loadSides(imageData.data)
   setInterval(generation, delay) // delay in mS
 }
 

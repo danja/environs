@@ -4,6 +4,8 @@ _Global Artificial Life_
 
 ### Status
 
+**2021-12-21** : Life still buggy, but very close. Out-by-one errors at the age of 57.
+
 **2021-12-20** : made a crude (still buggy) version of Conway's Game of Life using HTML canvas, live at : https://hyperdata.it/environs/life/
 
 **2021-11-27** : still writing up _this_ but have cobbled together a simple Node HTTP server that can do GET and PUT against filesystem.
