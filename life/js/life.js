@@ -9,14 +9,17 @@
 // calculateGrid() goes hidden -> main
 // copy() from main -> hidden
 
-const delay = 100 // mS between generations
+const delay = 50 // mS between generations
 
 const width = 400 // is also in HTML
 const height = 400
 
+const on = 255 // display colours
+const off = 0
+
 // initial state taken from an image
 var image = new Image()
-image.src = 'media/logo-invert.png'
+image.src = 'media/logo.png'
 
 // uses 2 canvasses
 var canvas = document.getElementById('canvas')
@@ -73,33 +76,33 @@ function calculateGrid () {
 }
 
 function loadSides (targetData, targetContext) {
-  const north = 0
-  const south = 0
-  const east = 0
-  const west = 0
+  // const north = 0
+  // const south = 0
+  // const east = 0
+  // const west = 0
 
   var x = 0
   for (let y = 0; y < height; y++) {
     // do west to binary here
-    setState(targetData, 0, y, 0)
+    setState(targetData, x, y, 0)
   }
 
   x = 399
   for (let y = 0; y < height; y++) {
     // do east to binary here
-    setState(targetData, width - 1, y, 0)
+    setState(targetData, x, y, 0)
   }
 
   var y = 0
   for (let x = 0; x < width; x++) {
     // do north to binary here
-    setState(targetData, x, 0, 0)
+    setState(targetData, x, y, 0)
   }
 
   y = 399
   for (let x = 0; x < width; x++) {
     // do south to binary here
-    setState(targetData, x, height - 1, 0)
+    setState(targetData, x, y, 0)
   }
   targetContext.putImageData(imageData, 0, 0)
 }
@@ -122,7 +125,7 @@ function grey () {
     for (let j = 0; j < height; j++) {
       let val = getState(imageData.data, i, j)
       if (val == 1) {
-        setState(imageData.data, i, j, Math.floor(Math.random() * 2)) // newVal
+        setState(imageData.data, i, j, Math.floor(Math.random() * 2))
       }
     }
   }
@@ -158,14 +161,14 @@ function getState (data, x, y) {
 function setState (data, x, y, alive) {
   let pos = 4 * (x + y * height)
   if (alive == 0) {
-    data[pos] = 255 // R
-    data[pos + 1] = 255 // G
-    data[pos + 2] = 255 // B
+    data[pos] = off // R
+    data[pos + 1] = off // G
+    data[pos + 2] = off // B
     return
   }
-  data[pos] = 0
-  data[pos + 1] = 0
-  data[pos + 2] = 0
+  data[pos] = on
+  data[pos + 1] = on
+  data[pos + 2] = on
 }
 
 // poking around for debugging
@@ -195,11 +198,12 @@ function makeThree () {
 
 // main loop
 function generation () {
+  loadSides(imageData.data, context)
+  context.putImageData(imageData, 0, 0)
   copy(imageData, imageDataHidden, contextHidden)
   contextHidden.putImageData(imageDataHidden, 0, 0)
-  context.clearRect(0, 0, 400, 400)
+  // context.clearRect(0, 0, 400, 400)
   calculateGrid()
-  context.putImageData(imageData, 0, 0)
 }
 
 function main () {
@@ -209,9 +213,7 @@ function main () {
   imageData = context.getImageData(0, 0, width, height)
   imageDataHidden = contextHidden.getImageData(0, 0, width, height)
 
-  loadSides(imageData.data, context)
-
-  grey()
+  // grey()
   copy(imageData, imageDataHidden, contextHidden)
 
   setInterval(generation, delay) // delay in mS
