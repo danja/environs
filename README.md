@@ -4,7 +4,7 @@ _Global Artificial Life_
 
 ### Status
 
-**2021-12-24** : Life fixed.
+**2021-12-24** : Bugs in Life fixed.
 
 **2021-12-21** : Life still buggy, but very close. Out-by-one errors at the age of 57.
 
