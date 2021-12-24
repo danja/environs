@@ -4,6 +4,8 @@ _Global Artificial Life_
 
 ### Status
 
+**2021-12-24** : Life fixed.
+
 **2021-12-21** : Life still buggy, but very close. Out-by-one errors at the age of 57.
 
 **2021-12-20** : made a crude (still buggy) version of Conway's Game of Life using HTML canvas, live at : https://hyperdata.it/environs/life/
@@ -37,9 +39,23 @@ An _Environs Agent_ will typically run in a browser and have the following featu
 
 _Note that the implementation of an agent doesn't necessarily have to run in a browser : 'headless' agents are fine._
 
-### Ports
+### Agent Connectors
 
-Ports are HTTP resources. They may act as inputs or outputs (or both). Not Roy's HATEOS, but the Web server as repository of connection state.
+Agent Connectors are HTTP resources. They may act as inputs or outputs (or both). A twist on Roy's HATEOS, the Web server as repository of connection state.
+
+#### HTTP Methods & Media Types
+
+_Provisionally :_
+
+A resource, the **Index** (with arbirary URL), should respond to -
+
+- HTTP GET, requesting a HTML media type with a description and/or visualization of any associated Agent Connectors
+
+eg. `Accept: text/html, application/xhtml+xml, application/xml;q=0.9, image/webp, */*;q=0.8`
+
+- HTTP GET, requesting an RDF media type with a description of any associated Agent Connectors
+
+gent SHOULD be an id
 
 ### Vocabularies
 
