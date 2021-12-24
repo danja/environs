@@ -9,7 +9,7 @@
 // calculateGrid() goes hidden -> main
 // copy() from main -> hidden
 
-const delay = 50 // mS between generations
+const delay = 10 // mS between generations
 
 const width = 400 // is also in HTML
 const height = 400
@@ -87,7 +87,7 @@ function loadSides (targetData, targetContext) {
     setState(targetData, x, y, 0)
   }
 
-  x = 399
+  x = width - 1
   for (let y = 0; y < height; y++) {
     // do east to binary here
     setState(targetData, x, y, 0)
@@ -99,7 +99,7 @@ function loadSides (targetData, targetContext) {
     setState(targetData, x, y, 0)
   }
 
-  y = 399
+  y = height - 1
   for (let x = 0; x < width; x++) {
     // do south to binary here
     setState(targetData, x, y, 0)
@@ -147,7 +147,7 @@ function printGrid (data) {
 // canvas data is an array of RGBA values
 // this maps to x,y flattens to 1 bit
 function getState (data, x, y) {
-  let pos = 4 * (x + y * height)
+  let pos = 4 * (x + y * width)
   let sum = data[pos] + data[pos + 1] + data[pos + 2] // R+G+B
   if (sum < 384) {
     // black-ish is alive, 1
@@ -159,7 +159,7 @@ function getState (data, x, y) {
 // takes one bit at x,y
 // maps to canvas 1D array
 function setState (data, x, y, alive) {
-  let pos = 4 * (x + y * height)
+  let pos = 4 * (x + y * width)
   if (alive == 0) {
     data[pos] = off // R
     data[pos + 1] = off // G
@@ -172,10 +172,12 @@ function setState (data, x, y, alive) {
 }
 
 // poking around for debugging
-function testStates () {
-  for (let i = 1; i < width - 2; i++) {
+function test () {
+  for (let i = 0; i < width / 2; i++) {
     let val = getState(imageData.data, i, 100)
-    setState(imageDataHidden.data, i, 100, 1)
+    // setState(imageDataHidden.data, i, 100, 1)
+    setState(imageData.data, i, 100, 1)
+    setState(imageData.data, i, 120, 1)
   }
   context.putImageData(imageData, 0, 0)
   contextHidden.putImageData(imageDataHidden, 0, 0)
@@ -202,7 +204,6 @@ function generation () {
   context.putImageData(imageData, 0, 0)
   copy(imageData, imageDataHidden, contextHidden)
   contextHidden.putImageData(imageDataHidden, 0, 0)
-  // context.clearRect(0, 0, 400, 400)
   calculateGrid()
 }
 
@@ -216,7 +217,9 @@ function main () {
   // grey()
   copy(imageData, imageDataHidden, contextHidden)
 
+  //   test()
   setInterval(generation, delay) // delay in mS
+  // generation()
 }
 
 // wait until image has loaded before doing stuff
