@@ -53,9 +53,23 @@ A resource, the **Index** (with arbirary URL), should respond to -
 
 eg. `Accept: text/html, application/xhtml+xml, application/xml;q=0.9, image/webp, */*;q=0.8`
 
-- HTTP GET, requesting an RDF media type with a description of any associated Agent Connectors
+- HTTP GET, requesting an RDF media type with a description of any associated Agent Connectors plus any other relevant metadata
 
-gent SHOULD be an id
+eg. `Accept: text/turtle`
+
+**TBD** _may_ HTTP POST at the index URL for data submission?
+
+Each **Agent Connector** URL should respond to -
+
+- HTTP GET, requesting a JSON-LD representing the current state of the identified connector
+
+**TBD** preferred format - which is best for lists..? Just use a binary?
+
+eg. `Accept: application/ld+json;profile=http://www.w3.org/ns/json-ld#expanded`
+
+- HTTP PUT, requesting the replacement of the current state of the identified connector with a new one
+
+// PUT returns a Created, OK or No Content
 
 ### Vocabularies
 
@@ -73,6 +87,7 @@ gent SHOULD be an id
 ### Non-Goals
 
 - Performance
+- Synchronous behaviour
 
 ## Life Example
 
