@@ -2,7 +2,11 @@
 
 _Global Artificial Life_
 
+*...and Web of Things*
+
 ### Status
+
+**2021-12-24** : Realised the server component of this should also lend itself to controlling the various microcntrolled based projects I'm working on. 
 
 **2021-12-24** : Bugs in Life fixed.
 
